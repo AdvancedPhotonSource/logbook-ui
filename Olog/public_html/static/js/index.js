@@ -48,6 +48,18 @@ $(document).ready(function(){
         checkList.hide();
     });
 
+        $('#log_image_size_dropdown ul li').unbind('click');
+        $('#log_image_size_dropdown ul li').click(function(e){
+		$(this).toggleClass('active').siblings().removeClass('active');
+                if($(e.target).text() == 'actual')
+			var desc = log_desc;
+		else
+	        	var desc = imageToSize($("#log_description").text(), $(e.target).text(), false);
+       	        $("#log_description").text(desc);
+	        setMarkdown("log_description");
+        });
+
+
     var searchCheck = $('#search-checkbox');
 	// Select include history
     searchCheck.prop('checked', ologSettings.includeHistory);

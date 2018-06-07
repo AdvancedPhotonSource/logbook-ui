@@ -22,7 +22,7 @@ $(document).ready(function(){
             changeMonth: true,
             changeYear: true,
             dateFormat: "D, d M yy",
-			timeFormat: "HH:mm:ss",
+	    timeFormat: "HH:mm:ss",
             maxDateTime: timenow,
             firstDay: datePickerFirstName
         }
@@ -176,11 +176,25 @@ $(document).ready(function(){
 		// Append id
 		var logParts = logId.split("_");
 		log[0].id = logParts[0];
+		if (log[0].description.includes("#!#!#!#")) {
+                        uploadDataCKE = [];
+                        for(var i=0; i<permUploadDataCKE.length; i++){
+                            var data = permUploadDataCKE[i];
+                            if(data !== null) {
+                                var file = data.files[0];
+                                    if (log[0].description.includes("#!#!#!#"+file.name)) 
+                                        uploadDataCKE.push(data);
+                            }   
+                        }
+			log[0].description = replaceAll(log[0].description, "#!#!#!#" ,serviceurl+"attachments/"+log[0].id+"/");
+                }
+
 		if(isValidLog(log) === true) {
+	            	modifyLog(log);
+        		uploadFiles(logParts[0], uploadDataCKE, "#fileupload2");
 
-            modifyLog(log);
 
-            $('#files div').addClass('upload-progress');
+            		$('#files div').addClass('upload-progress');
 			$('#files div p button').remove();
 			$('#files div button').remove();
 			$('.upload-progress-loader').show();
@@ -193,6 +207,7 @@ $(document).ready(function(){
 		setTimeout(function(){
 			var logParts = logId.split("_");
 			uploadFiles(logParts[0], uploadData, "#fileupload2");
+            		//uploadFiles(logParts[0], permUploadDataCKE, "#fileupload2");
 			uploadPastedFiles(logParts[0], firefoxPastedData);
 			window.location.href = firstPageName;
 		}, 500);
@@ -287,7 +302,7 @@ function checkLogObject(log) {
 function fillInForm(log) {
 	$("#log_body").text(log.description);
     //escape the text for any html elements entered
-    createMarkdownTextarea("log_body");
+//    createMarkdownTextarea("log_body");
 
 	var notImages = new Array();
 

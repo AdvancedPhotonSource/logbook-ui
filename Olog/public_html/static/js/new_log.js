@@ -76,14 +76,34 @@ $(document).ready(function(){
 		l("submit log");
 
 		if(isValidLog(log) === true) {
-
 			// Create properties
 			if(log[0].properties.length !== 0) {
 				createProperty(log[0].properties);
 			}
 
-			var newLogId = createLog(log);
-			l(newLogId);
+			if (log[0].description.includes("#!#!#!#")) {
+				temp_desc = log[0].description;
+				log[0].description = " ";
+				var newLogId = createLog(log);
+				l(newLogId);
+				log[0].id=newLogId;
+				uploadDataCKE = [];
+				for(var i=0; i<permUploadDataCKE.length; i++){
+                		    var data = permUploadDataCKE[i];
+                	            if(data !== null) {
+                                        var file = data.files[0];
+                                        if (temp_desc.includes("#!#!#!#"+file.name)) 
+					    uploadDataCKE.push(data);
+                                    }
+                                }
+				log[0].description = replaceAll(temp_desc, "#!#!#!#", serviceurl+"attachments/"+newLogId+"/");
+				modifyLog(log);
+			}
+			else {
+				var newLogId = createLog(log);
+				l(newLogId);
+				log[0].id=newLogId;
+			}
 
 			if(newLogId !== null) {
 				$('#files div').addClass('upload-progress');
@@ -92,7 +112,10 @@ $(document).ready(function(){
 				$('.upload-progress-loader').show();
 				setTimeout(function(){
 					uploadFiles(newLogId, uploadData, "#fileupload");
+					//uploadFiles(newLogId, permUploadDataCKE, "#fileupload");
 					uploadPastedFiles(newLogId, firefoxPastedData);
+					uploadFiles(newLogId, uploadDataCKE, "#fileupload");
+				
 					window.location.href = firstPageName;
 				}, 500);
 			}
@@ -114,7 +137,7 @@ $(document).ready(function(){
 	// Initialize common Log functionality
 	initialize(null);
 
-    createMarkdownTextarea("log_body");
+//    createMarkdownTextarea("log_body");
 
     // Upload
 	upload('fileupload');
@@ -163,3 +186,45 @@ function startListeningForRemovePropertyClicks() {
 		$($(e.target).parents('div')[0]).remove();
 	});
 }
+/*
+// Use image and overgive image src to ckeditor
+function useImage(imgSrc, uploadData) {
+    var funcNum = '1';
+    var imgSrc = imgSrc;
+    var fileUrl = imgSrc;
+    CKEDITOR.tools.callFunction( funcNum, fileUrl );
+    appendCKEImages(uploadData);
+}
+
+function selected() {
+    var x = document.getElementById("fileupload);
+    if ('files' in x) {
+        if (x.files.length == 0) {
+            console.log("Select one or more files.");
+        } else {
+                if ( x.files.length >1) {
+                    alert("select single file only");
+                }
+                else {
+                file=x.files[0];
+                console.log(file.name);
+                setTimeout(function(){
+                    useImage("#!#!#!#"+file.name, uploadData);
+                }, 300);
+            }
+         }
+    }
+    else {
+        if (x.value == "") {
+            console.log("Select one or more files.");
+        } else {
+            alert("The files property is not supported by your browser!");
+        }
+    }
+}
+
+function openFileBrowser() {
+	l("in openFileBrowser");
+	$('#fileupload2').trigger('click');
+}
+*/

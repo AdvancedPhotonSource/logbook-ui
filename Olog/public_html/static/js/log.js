@@ -7,8 +7,63 @@
 // Dropped and chosen images are storred in this array to be uploaded
 var uploadData = [];
 
+// image file object chosen from ckeditor are storred in these arrays later to be uploaded
+var tempUploadDataCKE = [];
+var permUploadDataCKE = [];
+
 // Firefox and chrome pasted file data is saved into this array.
 var firefoxPastedData = [];
+
+//function to collect ckeditor's selected image
+function appendCKEImages(imageObjArr) {
+	tempUploadDataCKE = tempUploadDataCKE.concat(imageObjArr);
+//	console.log("Append Images in temp, len =" + tempUploadDataCKE.length);
+}
+
+//if ok button is selected add the ckeditor image dialog for upload
+function imageOK() {
+	if (tempUploadDataCKE.length > 0) 
+	//console.log("in imageOK");
+	permUploadDataCKE = permUploadDataCKE.concat(tempUploadDataCKE.slice(-1));
+	tempUploadDataCKE = [];
+//	console.log("ImageOK len= "+permUploadDataCKE.length);
+}
+
+//function to add a new image to image list and preview it in ckeditor body
+function uploadLocalImage(img) {
+    //console.log("in uploadLocalImage");
+    if (img.getAttribute('src').includes("#!#!#!#")) {
+	var flag=0;
+	var imgName = img.getAttribute('src').replace("#!#!#!#","");
+	for (var i=0; i < permUploadDataCKE.length; i++) {
+	    data = permUploadDataCKE[i];
+	    if (data !== null && data.files && data.files[0] && data.files[0].name==imgName) {
+		flag=1;
+		previewImg(img, data.files[0])
+    		//console.log(" previewed Local Image1");
+		break;
+	    }
+	}
+	if (flag == 0 && tempUploadDataCKE.length > 0) {
+    		//console.log("Added image to perm upload data array");
+		permUploadDataCKE = permUploadDataCKE.concat(tempUploadDataCKE.slice(-1));
+		if (tempUploadDataCKE.slice(-1)[0].files && tempUploadDataCKE.slice(-1)[0].files[0]) {
+			previewImg(img, tempUploadDataCKE.slice(-1)[0].files[0])
+    			//console.log("Previewed Local Image1");
+		}
+	}
+    }
+    tempUploadDataCKE = [];
+}
+
+//function to preview an image from local disk
+function previewImg(imgElement, fileData) {
+	var reader = new FileReader();
+        reader.onload = function (e) {
+                imgElement.setAttribute('src', e.target.result);
+        }
+        reader.readAsDataURL(fileData);
+}
 
 /**
  * Check user credentials and start listening for events that are important for
@@ -301,6 +356,8 @@ function upload(elementId) {
 	});
 }
 
+/**
+ * Creates a new image from a given source
 /**
  * Creates a new image from a given source
  * @param source image source (blob in this case)

@@ -7,5 +7,8 @@ CKEDITOR.editorConfig = function( config ) {
 	// Define changes to default configuration here. For example:
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
-	config.extraPlugins = 'image,timestamp';
+        //config.filebrowserBrowseUrl = 'plugins/uploader/imgbrowser.html';
+	config.removeButtons = 'Save,Source';
+        config.extraPlugins = 'image,timestamp,uploader';
+	config.enterMode = CKEDITOR.ENTER_DIV;
 };

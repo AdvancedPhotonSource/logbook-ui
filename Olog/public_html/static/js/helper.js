@@ -103,6 +103,7 @@ function returnTimeFilterTimestamp(from, to) {
  * @returns {String} First X words
  */
 function returnFirstXWords(string, count){
+	//string = textHTML(string);
 	var words = string.split(" ");
 	var summary = "";
 	var append = "";
@@ -151,6 +152,16 @@ function multiLineHtmlEncode(value) {
 		lines[i] = htmlEncode(lines[i])+"<br />";
 	}
 	return lines.join('\r\n');
+}
+
+//like bash's sleep
+function sleep_js(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+async function sleep() {
+  console.log('Taking a break for 200 secs...');
+  await sleep_js(200000);
+  console.log('Back from sleep... ');
 }
 
 /**
@@ -303,6 +314,48 @@ function escapeHTML(str){
     var div = document.createElement('div');
     div.appendChild(document.createTextNode(str));
     return div.innerHTML;
+}
+
+function escapeRegExp(str) {
+    return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+}
+
+//replace all substrings with a string
+function replaceAll(str, find, replace) {
+    return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+}
+
+//convert normal images to thumbnails
+function imageToSize(str, size, border){
+    if (size == "small")
+	var side = 100;
+    else if (size == "medium")
+	var side = 250;
+    else if (size == "large")
+	var side = 500;
+    else {
+	var side = size;
+    }
+    var div = document.createElement("div");
+    div.innerHTML = str;
+    images = div.getElementsByTagName('img');
+    for (i=0; i<images.length; i++) {
+        if(images[i] && images[i].style) {
+	    images[i].style.height = side+'px';
+	    images[i].style.width = side+'px';
+	    if (border)
+		images[i].style.border = '1px solid '+border;
+    	}
+    }
+    return div.innerHTML;
+}    
+
+//get the text out of HTML string
+function textHTML(str){
+    var div = document.createElement("div");
+    div.innerHTML = str;
+    var text = div.textContent || div.innerText || "";
+    return text;
 }
 
 /**

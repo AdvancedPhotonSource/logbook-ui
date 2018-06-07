@@ -11,6 +11,9 @@
  * @param {type} saveSelectedItemsIntoACookie only save current selected data into a cookie if this flag is set to true
  * @param {type} showSelectedItemsFromACookie should selected items from a cookie be displayed or not
  */
+
+var log_desc = "";
+
 function loadLogbooks(targetId, showByDefault, saveSelectedItemsIntoACookie, showSelectedItemsFromACookie){
 	$('#' + targetId).find("li:gt(1)").remove();
 
@@ -271,13 +274,14 @@ function getLogNew(id, myFunction){
 function showLog(log, id){
 	$('#load_log').show("fast");
 	globalLogId = id;
-	var desc = log.description;
+	log_desc = log.description;
 
     //escape the text for any html elements entered
-	$("#log_description").text(escapeHTML(desc));
+	//$("#log_description").text(escapeHTML(desc));
+	$("#log_description").text(log_desc);
 	setMarkdown("log_description");
-
 	//$("#log_description").attr("rows", lines.length);
+
 
 	$("#log_owner").html(log.owner);
 	$("#log_date").html(formatDate(log.modifiedDate));
@@ -573,7 +577,7 @@ function prepareParentAndChildren(i, children, prepend, logOwners) {
 
 	// Build customized Log object
 	var newItem = {
-		description: returnFirstXWords(item.description, 40),
+		description: textHTML(returnFirstXWords(item.description, 40)),
 		owner: originalOwner,
 		modifiedOwner: item.owner,
 		createdDate: formatDate(item.createdDate),
@@ -631,12 +635,13 @@ function prepareParentAndChildren(i, children, prepend, logOwners) {
 			// Create custom attribute thumbnail object
 			newItem.attachments.push(
 				{imageUrl: serviceurl + "attachments/" + item.id + "/" + attachment.fileName + ":thumbnail"}
+				//{imageUrl: serviceurl + "attachments/" + item.id + "/" + attachment.fileName }
 			);
 		});
 	}
 
 	html = Mustache.to_html(logTemplate, newItem);
-
+//	html = imageToSize(html, 50, "#FFFFFF");
 	// Append or prepend html
 	if(prepend === false) {
 		$("#load_logs").append(html);
@@ -652,10 +657,9 @@ function prepareParentAndChildren(i, children, prepend, logOwners) {
 		if(i === 0) {
 			return;
 		}
-
 		// Build customized Log object
 		var childItem = {
-			description: returnFirstXWords(child.description, 40),
+			description: textHTML(returnFirstXWords(child.description, 40)),
 			owner: logOwners[child.id + '_1'],
 			modifiedOwner: child.owner,
 			createdDate: formatDate(child.createdDate),
@@ -957,8 +961,9 @@ function generateLogObject() {
 		"eventStart":""
 	}];
 
-	// Set description
-	log[0].description = $('#log_body').val();
+	// Set description (get data from ckeditor body)
+	//log[0].description = $('#log_body').val();
+	log[0].description = CKEDITOR.instances.log_body.getData();
 
 	// Set logbooks
 	var logbooksString = $('input[name=hidden-logbooks]').val();

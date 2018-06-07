@@ -110,9 +110,10 @@
 							</div>
 
 							<div class="log_body">
-								<textarea rows="5" id="log_body" class="form-control"></textarea>
+								<textarea rows="5" id="log_body" class="form-control" name="log_body"></textarea>
 							</div>
-
+							<script src="static/ckeditor/ckeditor.js"></script>
+							<script src="static/js/local_ckeditor.js"></script>
 							<div class="log_attachments">
 								<span class="log_view_details">Attachments</span>
 								<span class="btn btn-success fileinput-button">
@@ -147,8 +148,6 @@
 							</div>
 
 							<div class="clear"></div>
-						</form>
-
 						<div>
 							<div contenteditable="true" id="paste-area"></div>
 						</div>

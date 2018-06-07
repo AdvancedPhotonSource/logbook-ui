@@ -307,11 +307,23 @@
 											<i title="Modify Log Entry" class="glyphicon glyphicon-pencil"></i>
 											EDIT
 										</a>
-										<a id="delete_log_link" class="log_modify_link float_right float_right_padding" read-only="false" href="#" onclick="showDeleteModal('deleteLogModal', globalLogId);">
-											<i title="Delete Log Entry" class="glyphicon glyphicon-remove-sign"></i>
+										<!--<a id="modify_image" class="log_modify_link float_right float_right_padding" href="#" onclick="">
+											<i title="Modify Image" class="glyphicon glyphicon-remove-sign"></i>
 											DELETE
-										</a>
+										</a>-->
 									</h5>
+								</div>
+								<div id="log_image_size_dropdown" class="btn-group pull-right">
+									<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+										<i title="Image size" class="glyphicon glyphicon-picture"></i>
+										<span class="caret"></span>
+									</a>
+									<ul class="dropdown-menu">
+										<li class="active"><a href="#">actual</a></li>
+										<li><a href="#">small</a></li>
+										<li><a href="#">medium</a></li>
+										<li><a href="#">large</a></li>
+									</ul>
 								</div>
 
 								<div class="log_details display_none">
