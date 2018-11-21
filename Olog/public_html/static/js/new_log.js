@@ -81,13 +81,14 @@ $(document).ready(function(){
 				createProperty(log[0].properties);
 			}
 
+            uploadDataCKE = [];
 			if (log[0].description.includes("#!#!#!#")) {
 				temp_desc = log[0].description;
 				log[0].description = " ";
 				var newLogId = createLog(log);
 				l(newLogId);
 				log[0].id=newLogId;
-				uploadDataCKE = [];
+
 				for(var i=0; i<permUploadDataCKE.length; i++){
                 		    var data = permUploadDataCKE[i];
                 	            if(data !== null) {
