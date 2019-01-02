@@ -277,7 +277,20 @@ function showLog(log, id){
 	log_desc = log.description;
 
 	//Replace textarea with CKEDITOR display panel, remove toolbar to make it read-only.
-	if (!CKEDITOR.instances.log_description) CKEDITOR.replace("log_description", {toolbar: [], allowedContent: true, height: '50vh'});
+	if (!CKEDITOR.instances.log_description) {
+		var editor = CKEDITOR.replace("log_description", {toolbar: [], allowedContent: true, height: '50vh'});
+
+		//Override internal click event handler to allow mouse click to work on external URL links.
+		editor.on( 'contentDom', function() {
+		    var editable = editor.editable();
+		    editable.attachListener( editable, 'click', function( evt ) {
+	                var link = new CKEDITOR.dom.elementPath( evt.data.getTarget(), this ).contains( 'a' );
+        	        if ( link && evt.data.$.button != 2 && link.isReadOnly() ) {
+            	 	    window.open( link.getAttribute( 'href' ) );
+        	        }
+		    }, null, null, 15 );
+		} );
+	}
 	CKEDITOR.instances.log_description.setData(log_desc);
 	
 	$("#log_owner").html(log.owner);
@@ -656,7 +669,7 @@ function prepareParentAndChildren(i, children, prepend, logOwners) {
 		}
 		// Build customized Log object
 		var childItem = {
-			description: textHTML(returnFirstXWords(child.description, 40)),
+			description: textHTML(child.description, 20),
 			owner: logOwners[child.id + '_1'],
 			modifiedOwner: child.owner,
 			createdDate: formatDate(child.createdDate),
