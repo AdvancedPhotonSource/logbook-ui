@@ -96,40 +96,6 @@ function returnTimeFilterTimestamp(from, to) {
 	return [currentSeconds - fromSeconds, currentSeconds - toSeconds];
 }
 
-/*
- * Retun first X words from the string.
- * @param {type} string input string
- * @param {type} count how many of words do we want to return
- * @returns {String} First X words
- */
-function returnFirstXWords(string, count){
-	//string = textHTML(string);
-	var words = string.split(" ");
-	var summary = "";
-	var append = "";
-
-	if (count > words.length) {
-		count = words.length;
-
-	} else {
-		append = " ...";
-	}
-
-	if(words.length > 0){
-		summary = words[0];
-
-		if(words.length > 1){
-			for(i=1; i<count; i++) {
-				summary += " " + words[i];
-			}
-		}
-		return summary + append;
-
-	}else {
-		return summary;
-	}
-}
-
 /**
  * Format the date according to format specified in configuration.js file
  * @param {type} input datetime string
@@ -350,12 +316,16 @@ function imageToSize(str, size, border){
     return div.innerHTML;
 }    
 
-//get the text out of HTML string
-function textHTML(str){
+//get the text out of HTML string and return first n words
+function textHTML(str, count){
     var div = document.createElement("div");
     div.innerHTML = str;
     var text = div.textContent || div.innerText || "";
-    return text;
+    var words = text.split(/\s+/);
+    if (count < words.length)
+        return words.slice(0,count).join(" ") + "...";
+    else
+        return text ;
 }
 
 /**
