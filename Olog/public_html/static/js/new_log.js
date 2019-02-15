@@ -80,8 +80,8 @@ $(document).ready(function(){
 			if(log[0].properties.length !== 0) {
 				createProperty(log[0].properties);
 			}
+            var uploadDataCKE = [];
 
-            uploadDataCKE = [];
 			if (log[0].description.includes("#!#!#!#")) {
 				temp_desc = log[0].description;
 				log[0].description = " ";

@@ -171,13 +171,13 @@ $(document).ready(function(){
 		e.preventDefault();
 
 		var log = generateLogObject();
+                var uploadDataCKE = [];
 		l(log[0]);
 
 		// Append id
 		var logParts = logId.split("_");
 		log[0].id = logParts[0];
 		if (log[0].description.includes("#!#!#!#")) {
-                        uploadDataCKE = [];
                         for(var i=0; i<permUploadDataCKE.length; i++){
                             var data = permUploadDataCKE[i];
                             if(data !== null) {
