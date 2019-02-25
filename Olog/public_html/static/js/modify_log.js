@@ -171,13 +171,13 @@ $(document).ready(function(){
 		e.preventDefault();
 
 		var log = generateLogObject();
+		var uploadDataCKE = [];
 		l(log[0]);
 
 		// Append id
 		var logParts = logId.split("_");
 		log[0].id = logParts[0];
 		if (log[0].description.includes("#!#!#!#")) {
-                        uploadDataCKE = [];
                         for(var i=0; i<permUploadDataCKE.length; i++){
                             var data = permUploadDataCKE[i];
                             if(data !== null) {
@@ -301,8 +301,27 @@ function checkLogObject(log) {
  */
 function fillInForm(log) {
 	$("#log_body").text(log.description);
-    //escape the text for any html elements entered
-//    createMarkdownTextarea("log_body");
+	//escape the text for any html elements entered
+	//    createMarkdownTextarea("log_body");
+	CKEDITOR.replace( "log_body" );
+	CKEDITOR.plugins.add( 'timestamp', {
+		icons: 'timestamp',
+		init: function( editor ) {
+			//Plugin logic goes here.
+			editor.addCommand( 'insertTimestamp', {
+				exec: function( editor ) {
+					var now = new Date();
+					editor.insertHtml( '<em>' + now.toString() + '</em>' );
+				}
+			});
+			editor.ui.addButton( 'Timestamp', {
+				label: 'Insert Timestamp',
+				command: 'insertTimestamp',
+				toolbar: 'insert,0'
+			});
+		}
+	});
+
 
 	var notImages = new Array();
 
