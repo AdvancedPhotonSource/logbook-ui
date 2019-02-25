@@ -766,7 +766,7 @@ function repeatLogs(data, prepend){
 	if(children.length > 0) {
 		logIndex ++;
 		if(ologSettings.logVersionOrder) {
-		children = children.reverse();
+			children = children.reverse();
 		}
 		prepareParentAndChildren(logIndex, children, prepend, logOwners);
 	}
